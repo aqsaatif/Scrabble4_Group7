@@ -1,0 +1,369 @@
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * This class handles all GUI activity of the game including the Scrabble board and player tiles
+ *
+ * @author: Aqsa Atif
+ * @version 1 November 10, 2024
+ *
+ * @author Yomna Ibrahim
+ * @version 2 November 11, 2024
+ *
+ *  @author Basma Mohammed
+ *  @version 3 November 23, 2024
+ */
+
+public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView {
+
+    public static int NUMOFPLAYERS = 0;
+    private JButton[][] boardButtons;
+    private JLabel currentPlayerLabel;
+    private JLabel playerTilesLabel;
+    private JLabel player1Points;
+    private JLabel player2Points;
+    private JLabel player3Points;
+    private JLabel player4Points;
+    private ScrabbleModel model;
+    private ScrabbleController controller;
+    private Dictionary dictionary;
+
+    public int numOfRealPlayers = 0;
+    public int numOfAiPlayers = 0;
+
+    private ScrabbleAI ai;
+
+
+
+    private final Color DLSCOLOR = new Color(255, 219, 88);
+    private final Color TLSCOLOR = new Color(137, 207, 240);
+    private final Color DWSCOLOR = new Color(227, 185, 255);
+    private final Color TWSCOLOR = Color.PINK;
+
+
+    public ScrabbleModelViewFrame() {
+        super("Scrabble Game"); //Create JFrame
+
+        this.dictionary = new Dictionary();
+        setNumOfPlayers();
+
+        model = new ScrabbleModel(numOfRealPlayers, numOfAiPlayers);
+        model.addScrabbleView(this); //register view to the model
+
+        ai = new ScrabbleAI(model, dictionary); //set up the ai
+        controller = new ScrabbleController(model, this);
+        setLayout(new BorderLayout());
+
+        // Board panel
+        JPanel boardPanel = new JPanel(new GridLayout(ScrabbleModel.SIZE, ScrabbleModel.SIZE));
+        boardButtons = new JButton[ScrabbleModel.SIZE][ScrabbleModel.SIZE];
+        for (int i = 0; i < ScrabbleModel.SIZE; i++) {
+            for (int j = 0; j < ScrabbleModel.SIZE; j++) {
+                JButton button = new JButton(" "); //Initialize buttons
+                button.setEnabled(false);
+                boardButtons[i][j] = button;
+                setButtonColor(i, j);
+                button.setOpaque(true);
+                boardPanel.add(boardButtons[i][j]);
+            }
+        }
+
+        //Add labels for the current player and their tiles
+        JPanel playerPanel = new JPanel(new GridLayout(2, 2));
+        currentPlayerLabel = new JLabel("Current Player: " + model.getCurrentPlayer().getName(), SwingConstants.CENTER);
+        playerTilesLabel = new JLabel("Tiles: " + model.getCurrentPlayer().printTiles());
+        playerPanel.add(currentPlayerLabel);
+        playerPanel.add(playerTilesLabel);
+
+        //Add labels for the players' points
+        JPanel pointPanel = new JPanel(new GridLayout(2,2));
+        player1Points = new JLabel("Player 1 Points: " + 0);
+        player2Points = new JLabel("Player 2 Points: 0");
+        player3Points = new JLabel("Player 3 Points: 0");
+        player4Points = new JLabel("Player 4 Points: 0");
+        pointPanel.add(player1Points);
+        pointPanel.add(player2Points);
+        pointPanel.add(player3Points);
+        pointPanel.add(player4Points);
+        playerPanel.add(pointPanel);
+
+        //Panel for place word and pass turn buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+
+        // Add a button to place the word
+        JButton placeWordButton = new JButton("Place Word");
+        placeWordButton.setActionCommand("Place Word");
+        placeWordButton.addActionListener(controller); // Trigger the controller when clicked
+        buttonPanel.add(placeWordButton);
+
+        //Add a button to pass your turn
+        JButton passTurnButton = new JButton("Pass Turn");
+        passTurnButton.setActionCommand("Pass Turn");
+        passTurnButton.addActionListener(controller);
+        buttonPanel.add(passTurnButton);
+
+
+        //Panel to describe what each coloured square means
+        JPanel legendPanel = new JPanel(new GridLayout(4,1));
+        legendPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
+
+        JLabel DLS = new JLabel("Double Letter Square");
+        DLS.setForeground(DLSCOLOR);
+        DLS.setBorder(BorderFactory.createLineBorder(DLSCOLOR, 4));
+        legendPanel.add(DLS);
+
+        JLabel TLS = new JLabel("Triple Letter Square");
+        TLS.setForeground(TLSCOLOR);
+        TLS.setBorder(BorderFactory.createLineBorder(TLSCOLOR, 4));
+        legendPanel.add(TLS);
+
+        JLabel DWS = new JLabel("Double Word Square");
+        DWS.setForeground(DWSCOLOR);
+        DWS.setBorder(BorderFactory.createLineBorder(DWSCOLOR, 4));
+        legendPanel.add(DWS);
+
+        JLabel TWS = new JLabel("Triple Word Square");
+        TWS.setForeground(TWSCOLOR);
+        TWS.setBorder(BorderFactory.createLineBorder(TWSCOLOR, 4));
+        legendPanel.add(TWS);
+
+        playerPanel.add(buttonPanel);
+        add(boardPanel, BorderLayout.CENTER);
+        add(legendPanel, BorderLayout.EAST);
+        add(playerPanel, BorderLayout.SOUTH);
+
+        //setPremiumSquares();
+
+        pack();
+        setSize(1000,900);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    private void setNumOfPlayers(){
+        int totalPlayers = -1;
+
+        while (totalPlayers < 2 || totalPlayers > 4){
+            try {
+                totalPlayers = Integer.parseInt(
+                        JOptionPane.showInputDialog(null, "Enter the total number of players (2-4):")
+                );
+                if (totalPlayers < 2 || totalPlayers > 4) {
+                    JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number between 2 and 4.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid number.");
+            }
+        }
+
+        int aiPlayers = -1;
+
+        while (aiPlayers < 0 || aiPlayers >= totalPlayers){
+            try {
+                aiPlayers = Integer.parseInt(
+                        JOptionPane.showInputDialog(null, "Enter the number of AI players (0-" + (totalPlayers - 1) + "):")
+                );
+                if (aiPlayers < 0 || aiPlayers >= totalPlayers) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Invalid input. Please ensure there is at least one real player."
+                    );
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid number.");
+            }
+        }
+
+
+        numOfRealPlayers = totalPlayers - aiPlayers;
+        numOfAiPlayers = aiPlayers;
+        NUMOFPLAYERS = numOfAiPlayers + numOfRealPlayers;
+    }
+
+    public static boolean getPlayerType(int playerID){
+        //if player is the first one, has to be normal player
+        if (playerID == 1){
+            return false;
+        }
+
+        //show Joption pane for deciding
+        String message = "What is the player type for player " + playerID + "?";
+        int playerChoice = JOptionPane.showOptionDialog(null, message, "Select Player Type", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Normal", "AI"}, "Normal");
+
+        return playerChoice != 0; //true if AI, false if normal
+    }
+
+    /**
+     * Set the button color of premium squares
+     * @param row the row of the premium square
+     * @param col the column of the premium square
+     */
+    private void setButtonColor(int row, int col) {
+        int premiumType = model.getPremiumSquares()[row][col];
+
+        switch (premiumType) {
+            case 2: // Double letter
+                boardButtons[row][col].setBackground(DLSCOLOR);
+                break;
+            case 3: // Triple letter
+                boardButtons[row][col].setBackground(TLSCOLOR);
+                break;
+            case 4: // Double word
+                boardButtons[row][col].setBackground(DWSCOLOR);
+                break;
+            case 5: // Triple word
+                boardButtons[row][col].setBackground(TWSCOLOR);
+                break;
+            default: // Regular square
+                boardButtons[row][col].setBackground(Color.WHITE);
+                break;
+        }
+    }
+
+
+    /**
+     * Method used to update the GUI when a player places a word
+     * @param e EventObject used to get the board and current player information
+     */
+    @Override
+    public void handleScrabbleStatusUpdate(ScrabbleEvent e) {
+        char[][] board = e.getBoard();
+        // Update the board buttons based on the new board state
+        for (int i = 0; i < ScrabbleModel.SIZE; i++) {
+            for (int j = 0; j < ScrabbleModel.SIZE; j++) {
+                boardButtons[i][j].setText(String.valueOf(board[i][j]));
+            }
+        }
+
+        // Update player info
+        handleScrabblePassTurnUpdate(e);
+
+        switch(model.getPlayers().indexOf(e.getCurrentPlayer())){
+            case 0:
+                player1Points.setText("Player 1 Points: " + e.getCurrentPlayer().getScore());
+                break;
+            case 1:
+                player2Points.setText(e.getCurrentPlayer().getName()+": " + e.getCurrentPlayer().getScore());
+                break;
+            case 2:
+                player3Points.setText(e.getCurrentPlayer().getName()+": "  + e.getCurrentPlayer().getScore());
+                break;
+            default:
+                player4Points.setText(e.getCurrentPlayer().getName()+": "  + e.getCurrentPlayer().getScore());
+                break;
+
+        }
+
+    }
+
+    /**
+     * Method used to update the GUI when a player passes their turn
+     * @param e EventObject used to get the current player information
+     */
+    @Override
+    public void handleScrabblePassTurnUpdate(ScrabbleEvent e){
+        //Update the labels for the current player and their tiles
+        currentPlayerLabel.setText("Current Player: " + e.getCurrentPlayer().getName());
+        playerTilesLabel.setText("Tiles: " + e.getCurrentPlayer().printTiles());
+    }
+
+    /**
+     * Method used to get the word the user wants to place on the board
+     * @return the word the user wants to place
+     */
+    public String getWord(){
+        String word = JOptionPane.showInputDialog(null, "Enter the word to place:");
+
+        word = word.toLowerCase(); //for consistency
+
+
+        if (word == null || word.isEmpty() || !dictionary.isValidWord(word)) {
+            JOptionPane.showMessageDialog(null, "Invalid word. Try again.");
+            word = getWord(); //allow user to continue entering a word
+        }
+
+        return word;
+    }
+
+    /**
+     * Method used to get the row on the board where the word will be placed
+     * @return the row number
+     */
+    public int getRow(){
+        int row = -1;
+        try {
+            row = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the starting row (1-" + (ScrabbleModel.SIZE) + "):"));
+
+        } catch (NumberFormatException ex) { //Number is not entered
+            JOptionPane.showMessageDialog(null, "Invalid row input. Try again.");
+            row = getRow(); //allow user to continue entering a row number
+        }
+
+        if (row <= 0 || row > ScrabbleModel.SIZE) { //out of bounds
+            JOptionPane.showMessageDialog(null, "Row out of bounds. Try again.");
+            row = getRow(); //allow user to continue entering a row number
+        }
+
+        return row;
+    }
+
+    /**
+     * Method used to get the column on the board where the word will be placed
+     * @return the column number
+     */
+    public int getColumn(){
+        int col = -1;
+        try {
+            col = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the starting column (1-" + (ScrabbleModel.SIZE) + "):"));
+        } catch (NumberFormatException ex) { //Number is not entered
+            JOptionPane.showMessageDialog(null, "Invalid column input. Try again.");
+            col = getColumn(); //Allow user to continue entering a column
+        }
+
+        if (col <= 0 || col > ScrabbleModel.SIZE) { //Out of bounds
+            JOptionPane.showMessageDialog(null, "Column out of bounds. Try again.");
+            col = getColumn(); //Allow user to continue entering a column
+        }
+
+        return col;
+    }
+
+    /**
+     * Method used to get the orientation, horizontal (H) or vertical (V), of the word placement
+     * @return true if H, false if V
+     */
+    public Boolean getOrientation(){
+        // Ask for orientation
+        String orientation = JOptionPane.showInputDialog(null, "Enter orientation (H for horizontal, V for vertical):");
+
+        boolean isHorizontal = true; // Default orientation
+        if (orientation != null && (orientation.equalsIgnoreCase("H") || orientation.equalsIgnoreCase("V"))) {
+            isHorizontal = orientation.equalsIgnoreCase("H");
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid orientation. Try again.");
+            isHorizontal = getOrientation(); //Allow user to continue entering an orientation
+        }
+
+        return isHorizontal;
+    }
+
+    /**
+     * @return number of real players
+     */
+    public int getNumOfRealPlayers() {
+        return numOfRealPlayers;
+    }
+
+    /**
+     * @return number of AI players
+     */
+    public int getNumOfAiPlayers() {
+        return numOfAiPlayers;
+    }
+
+    public static void main(String[] args) {
+        new ScrabbleModelViewFrame();
+    }
+
+
+}
