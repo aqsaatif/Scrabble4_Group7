@@ -26,7 +26,7 @@ public class ScrabbleAI{
      * Determines the best possible move and makes it
      *@param aiPlayer which is a player
      */
-    public static void playBestMove(Player aiPlayer){
+     public static void playBestMove(Player aiPlayer){
         Move bestMove = null;
         int highestScore = 0;
         char[][] myBoard = model.getBoard();
@@ -47,35 +47,26 @@ public class ScrabbleAI{
             model.changeTurn(); //Change the player's turns
             return;
         }
+        //generate all words from the tiles starting with that letter
+
+        List<String> possibleWords = generateWords(aiPlayer.getTiles());
 
         //iterate over all possible starting positions
-        for (int row = 0; row < ScrabbleModel.SIZE; row++){
-            for(int col = 0; col < ScrabbleModel.SIZE; col++){
+        for (int row =1; row < ScrabbleModel.SIZE; row++){
+            for(int col = 1; col < ScrabbleModel.SIZE; col++){
                 //try both vertical and horizontal placements
                 for (boolean isHorizontal: new boolean[]{true, false}){
-                    //generate all words from the tiles starting with that letter
-                    String existing = String.valueOf(myBoard[row][col]);
-                    List<Tile> tempTiles = new ArrayList<Tile>();
-                    if (!existing.equals(" ")){
-                        tempTiles.add(0,new Tile (existing,Tile.getTileScores().getOrDefault(existing, 0)));
-                    }
-                    tempTiles.addAll(aiPlayer.getTiles());
 
-                    List<String> possibleWords = generateWords(tempTiles);
 
                     for (String word: possibleWords){
                         //check if the word is a valid move
-                        if (row-word.length()>= 0 && col-word.length()>= 0){
-                            String[] check = model.checkWord(word, row, col, isHorizontal, aiPlayer);
-                            if (dictionary.isValidWord(word) && check[0].equals("true")){
-                                for (String possibleWord : possibleWords) {
-                                    if ( bestMove == null || word.length() > bestMove.word.length()) {
-                                        bestMove = new Move(word, row, col, isHorizontal);
-                                        existBest = existing;
+                        String[] check = model.checkWord(word, row, col, isHorizontal, aiPlayer);
+                        if (dictionary.isValidWord(word) && check[0].equals("true")){
+                            if (bestMove == null || word.length() > bestMove.word.length()) {
+                                bestMove = new Move(word, row, col, isHorizontal);
 
-                                    }
-                                }
                             }
+
                         }
                     }
                 }
