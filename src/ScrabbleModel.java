@@ -267,6 +267,7 @@ public class ScrabbleModel {
                     if (!String.valueOf(board[row - 1][col + i - 1]).equals(" ")){ //If cell is not blank
                         if (word.charAt(i) != board[row - 1][col + i - 1]) { //If cells does not contain the same letter as the word
                             check[0] = "false";
+                            return check;
                         } else{
                             validLocation = true;
                         }
