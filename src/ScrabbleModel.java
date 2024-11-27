@@ -1,4 +1,9 @@
 import java.util.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.*;
+import java.io.File;
+
 /**
  * The logic behind the Scrabble game
  * @author Yomna Ibrahim
@@ -9,6 +14,9 @@ import java.util.*;
  *
  *  @author Basma Mohammed
  *  @version 3 November 23, 2024
+ *
+ * @author Aqsa Atif
+ * @version 4, November 26, 2024
  */
 public class ScrabbleModel {
 
@@ -58,8 +66,69 @@ public class ScrabbleModel {
         }
 
         premiumSquares = new int[SIZE][SIZE];
-        initializePremiumSquares();
+        //initializePremiumSquares();
 
+        loadPremiumSquaresFromXML("premiumSquaresXML.txt");
+
+    }
+
+    /**
+     * Create customized premium squares
+     * @param filePath the name of the file that contain the location of premium squares in XML
+     */
+    public void loadPremiumSquaresFromXML(String filePath) {
+        try {
+            // Parse the XML file
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new File(filePath));
+
+            // Normalize the document to remove unnecessary whitespaces
+            doc.getDocumentElement().normalize();
+
+            // Get all the <row> elements
+            NodeList rowList = doc.getElementsByTagName("row");
+
+            for (int i = 0; i < rowList.getLength(); i++) {
+                Node rowNode = rowList.item(i);
+
+                if (rowNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element rowElement = (Element) rowNode;
+
+                    // Get the row number
+                    int rowNumber = Integer.parseInt(rowElement.getAttribute("number"));
+
+                    // Get all <square> elements within this row
+                    NodeList squareList = rowElement.getElementsByTagName("square");
+
+                    for (int j = 0; j < squareList.getLength(); j++) {
+                        Node squareNode = squareList.item(j);
+
+                        if (squareNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element squareElement = (Element) squareNode;
+
+                            // Extract the column and type attributes
+                            int colNumber = Integer.parseInt(squareElement.getAttribute("col"));
+                            String type = squareElement.getAttribute("type");
+
+                            //Set the premium square value accordingly
+                            if (type.equals("DLS")){
+                                premiumSquares[rowNumber][colNumber] = 2;
+                            } else if (type.equals("TLS")){
+                                premiumSquares[rowNumber][colNumber] = 3;
+                            } else if (type.equals("DWS")){
+                                premiumSquares[rowNumber][colNumber] = 4;
+                            } else if (type.equals("TWS")){
+                                premiumSquares[rowNumber][colNumber] = 5;
+                            }
+
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
