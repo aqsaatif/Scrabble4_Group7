@@ -409,6 +409,12 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         for (int i = 0; i < 7; i++){
             playerTiles[i].setText(playerHand.get(i).getLetter() + " (" + playerHand.get(i).getValue() + ")");
             playerTiles[i].setActionCommand(playerHand.get(i).getLetter());
+
+            if (model.currentPlayer.isAI()){
+                playerTiles[i].setEnabled(false);
+            } else{
+                playerTiles[i].setEnabled(true);
+            }
         }
     }
 
