@@ -63,8 +63,8 @@ public class Player {
      * Get the list of tiles for the player
      * @return the List of tiles
      */
-    public List<Tile> getTiles(){
-        return tiles;
+    public ArrayList<Tile> getTiles(){
+        return (ArrayList<Tile>) tiles;
     }
 
     /**

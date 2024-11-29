@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * This class handles all GUI activity of the game including the Scrabble board and player tiles
@@ -19,7 +20,12 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
     public static int NUMOFPLAYERS = 0;
     private JButton[][] boardButtons;
     private JLabel currentPlayerLabel;
-    private JLabel playerTilesLabel;
+    private JLabel wordToPlace;
+    JLabel row;
+    JLabel col;
+    JLabel orientation;
+
+    private JButton[] playerTiles;
     private JLabel player1Points;
     private JLabel player2Points;
     private JLabel player3Points;
@@ -60,8 +66,9 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         for (int i = 0; i < ScrabbleModel.SIZE; i++) {
             for (int j = 0; j < ScrabbleModel.SIZE; j++) {
                 JButton button = new JButton(" "); //Initialize buttons
-                button.setEnabled(false);
                 boardButtons[i][j] = button;
+                boardButtons[i][j].setActionCommand(i + " " + j);
+                boardButtons[i][j].addActionListener(controller);
                 setButtonColor(i, j);
                 button.setOpaque(true);
                 boardPanel.add(boardButtons[i][j]);
@@ -69,14 +76,12 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         }
 
         //Add labels for the current player and their tiles
-        JPanel playerPanel = new JPanel(new GridLayout(2, 2));
+        JPanel playerPanel = new JPanel(new GridLayout(2, 1));
         currentPlayerLabel = new JLabel("Current Player: " + model.getCurrentPlayer().getName(), SwingConstants.CENTER);
-        playerTilesLabel = new JLabel("Tiles: " + model.getCurrentPlayer().printTiles());
         playerPanel.add(currentPlayerLabel);
-        playerPanel.add(playerTilesLabel);
 
         //Add labels for the players' points
-        JPanel pointPanel = new JPanel(new GridLayout(2,2));
+        JPanel pointPanel = new JPanel(new GridLayout(1,4));
         player1Points = new JLabel("Player 1 Points: " + 0);
         player2Points = new JLabel("Player 2 Points: 0");
         player3Points = new JLabel("Player 3 Points: 0");
@@ -87,8 +92,43 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         pointPanel.add(player4Points);
         playerPanel.add(pointPanel);
 
+        JPanel playerOptionPanel = new JPanel(new GridLayout(1,2));
+
+        JPanel inputPanel = new JPanel(new GridLayout(2,1));
+        wordToPlace = new JLabel("", SwingConstants.CENTER);
+        inputPanel.add(wordToPlace);
+
+        JPanel tilePanel = new JPanel(new GridLayout(1,7));
+        playerTiles = new JButton[7];
+        ArrayList<Tile> playerHand = model.getCurrentPlayer().getTiles();
+        for (int i = 0; i < 7; i++){
+            JButton tile = new JButton(playerHand.get(i).getLetter() + " (" + playerHand.get(i).getValue() + ")");
+            playerTiles[i] = tile;
+            playerTiles[i].setActionCommand(playerHand.get(i).getLetter());
+            playerTiles[i].addActionListener(controller);
+            tilePanel.add(playerTiles[i]);
+        }
+
+        inputPanel.add(tilePanel);
+
+        playerOptionPanel.add(inputPanel);
+
+        JPanel sidePanel = new JPanel(new GridLayout(2,1));
+
+        JPanel infoPanel = new JPanel(new GridLayout(1, 3));
+        row = new JLabel ("Row: ");
+        col = new JLabel("Col: ");
+        orientation = new JLabel("Orientation: ");
+        infoPanel.add(row);
+        infoPanel.add(col);
+        infoPanel.add(orientation);
+        playerOptionPanel.add(infoPanel);
+
+        sidePanel.add(infoPanel);
+
+
         //Panel for place word and pass turn buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
 
         // Add a button to place the word
         JButton placeWordButton = new JButton("Place Word");
@@ -101,6 +141,19 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         passTurnButton.setActionCommand("Pass Turn");
         passTurnButton.addActionListener(controller);
         buttonPanel.add(passTurnButton);
+
+        JButton horizontalButton = new JButton("Horizontal");
+        horizontalButton.setActionCommand("Horizontal");
+        horizontalButton.addActionListener(controller);
+        buttonPanel.add(horizontalButton);
+
+        JButton verticalButton = new JButton("Vertical");
+        verticalButton.setActionCommand("Vertical");
+        verticalButton.addActionListener(controller);
+        buttonPanel.add(verticalButton);
+
+        sidePanel.add(buttonPanel);
+        playerOptionPanel.add(sidePanel);
 
 
         //Panel to describe what each coloured square means
@@ -127,10 +180,11 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         TWS.setBorder(BorderFactory.createLineBorder(TWSCOLOR, 4));
         legendPanel.add(TWS);
 
-        playerPanel.add(buttonPanel);
+
         add(boardPanel, BorderLayout.CENTER);
         add(legendPanel, BorderLayout.EAST);
-        add(playerPanel, BorderLayout.SOUTH);
+        add(playerPanel, BorderLayout.NORTH);
+        add(playerOptionPanel, BorderLayout.SOUTH);
 
         //setPremiumSquares();
 
@@ -178,6 +232,40 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         numOfRealPlayers = totalPlayers - aiPlayers;
         numOfAiPlayers = aiPlayers;
         NUMOFPLAYERS = numOfAiPlayers + numOfRealPlayers;
+    }
+
+    public String getWordToPlaced(){
+        return wordToPlace.getText();
+    }
+
+    public void setWordToPlace(String s){
+        wordToPlace.setText(s);
+    }
+
+    public String checkCellBlank(int row, int col){
+        return boardButtons[row][col].getText();
+    }
+
+    public boolean checkValidWord(String word){
+        return dictionary.isValidWord(word);
+    }
+
+    public void setRowCol(int row, int col){
+        this.row.setText("Row: " + row);
+        this.col.setText("Col: " + col);
+    }
+
+    public void clearRowCol(){
+        row.setText("Row: ");
+        col.setText("Col: ");
+    }
+
+    public void setOrientation(String orient){
+        this.orientation.setText("Orientation: " + orient);
+    }
+
+    public void clearOrientation(){
+        orientation.setText("Orientation: ");
     }
 
     public static boolean getPlayerType(int playerID){
@@ -243,13 +331,13 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
                 player1Points.setText("Player 1 Points: " + e.getCurrentPlayer().getScore());
                 break;
             case 1:
-                player2Points.setText(e.getCurrentPlayer().getName()+": " + e.getCurrentPlayer().getScore());
+                player2Points.setText(e.getCurrentPlayer().getName() + " Points: " + e.getCurrentPlayer().getScore());
                 break;
             case 2:
-                player3Points.setText(e.getCurrentPlayer().getName()+": "  + e.getCurrentPlayer().getScore());
+                player3Points.setText(e.getCurrentPlayer().getName()+" Points: "  + e.getCurrentPlayer().getScore());
                 break;
             default:
-                player4Points.setText(e.getCurrentPlayer().getName()+": "  + e.getCurrentPlayer().getScore());
+                player4Points.setText(e.getCurrentPlayer().getName()+" Points: "  + e.getCurrentPlayer().getScore());
                 break;
 
         }
@@ -264,7 +352,18 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
     public void handleScrabblePassTurnUpdate(ScrabbleEvent e){
         //Update the labels for the current player and their tiles
         currentPlayerLabel.setText("Current Player: " + e.getCurrentPlayer().getName());
-        playerTilesLabel.setText("Tiles: " + e.getCurrentPlayer().printTiles());
+        //playerTilesLabel.setText("Tiles: " + e.getCurrentPlayer().printTiles());
+
+        wordToPlace.setText("");
+        clearRowCol();
+        clearOrientation();
+
+        ArrayList<Tile> playerHand = model.getCurrentPlayer().getTiles();
+
+        for (int i = 0; i < 7; i++){
+            playerTiles[i].setText(playerHand.get(i).getLetter() + " (" + playerHand.get(i).getValue() + ")");
+            playerTiles[i].setActionCommand(playerHand.get(i).getLetter());
+        }
     }
 
     /**
