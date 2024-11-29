@@ -1,0 +1,13 @@
+<scrabbleBoard>
+    <row number="0">
+        <square col="0" type="TWS" />
+        <square col="3" type="DLS" />
+        <square col="7" type="DWS" />
+    </row>
+    <row number="1">
+        <square col="7" type="TLS" />
+    </row>
+    <row number="2">
+        <square col="6" type="DWS" />
+    </row>
+</scrabbleBoard>
