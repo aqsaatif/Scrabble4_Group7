@@ -13,6 +13,9 @@ import java.util.ArrayList;
  *
  *  @author Basma Mohammed
  *  @version 3 November 23, 2024
+ *
+ * @author Aqsa Atif
+ * @version 4 November 29, 2024
  */
 
 public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView {
@@ -20,7 +23,6 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
     public static int NUMOFPLAYERS = 0;
     private JButton[][] boardButtons;
     private JLabel currentPlayerLabel;
-    private JLabel playerTilesLabel;
 
     private JLabel wordToPlace;
     JLabel row;
@@ -40,8 +42,6 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
     public int numOfAiPlayers = 0;
 
     private ScrabbleAI ai;
-
-
 
     private final Color DLSCOLOR = new Color(255, 219, 88);
     private final Color TLSCOLOR = new Color(137, 207, 240);
@@ -77,24 +77,56 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
                 boardPanel.add(boardButtons[i][j]);
             }
         }
+        add(boardPanel, BorderLayout.CENTER);
 
-        //Add labels for the current player and their tiles
-        JPanel playerPanel = new JPanel(new GridLayout(2, 1));
-        currentPlayerLabel = new JLabel("Current Player: " + model.getCurrentPlayer().getName(), SwingConstants.CENTER);
-        playerPanel.add(currentPlayerLabel);
+        //Set up GUI
+        setPlayerPanel();
+        setPlayerOptionPanel();
+        setLegendPanel();
 
-        //Add labels for the players' points
-        JPanel pointPanel = new JPanel(new GridLayout(1,4));
-        player1Points = new JLabel("Player 1 Points: " + 0);
-        player2Points = new JLabel("Player 2 Points: 0");
-        player3Points = new JLabel("Player 3 Points: 0");
-        player4Points = new JLabel("Player 4 Points: 0");
-        pointPanel.add(player1Points);
-        pointPanel.add(player2Points);
-        pointPanel.add(player3Points);
-        pointPanel.add(player4Points);
-        playerPanel.add(pointPanel);
+        //setPremiumSquares();
 
+        pack();
+        setSize(1000,900);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    /**
+     * Information to let the user know what the coloured squares mean
+     */
+    public void setLegendPanel(){
+        //Panel to describe what each coloured square means
+        JPanel legendPanel = new JPanel(new GridLayout(4,1));
+        legendPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
+
+        JLabel DLS = new JLabel("Double Letter Square");
+        DLS.setForeground(DLSCOLOR);
+        DLS.setBorder(BorderFactory.createLineBorder(DLSCOLOR, 4));
+        legendPanel.add(DLS);
+
+        JLabel TLS = new JLabel("Triple Letter Square");
+        TLS.setForeground(TLSCOLOR);
+        TLS.setBorder(BorderFactory.createLineBorder(TLSCOLOR, 4));
+        legendPanel.add(TLS);
+
+        JLabel DWS = new JLabel("Double Word Square");
+        DWS.setForeground(DWSCOLOR);
+        DWS.setBorder(BorderFactory.createLineBorder(DWSCOLOR, 4));
+        legendPanel.add(DWS);
+
+        JLabel TWS = new JLabel("Triple Word Square");
+        TWS.setForeground(TWSCOLOR);
+        TWS.setBorder(BorderFactory.createLineBorder(TWSCOLOR, 4));
+        legendPanel.add(TWS);
+
+        add(legendPanel, BorderLayout.EAST);
+    }
+
+    /**
+     * GUI to let the user place a word
+     */
+    public void setPlayerOptionPanel(){
         JPanel playerOptionPanel = new JPanel(new GridLayout(1,2));
 
         JPanel inputPanel = new JPanel(new GridLayout(2,1));
@@ -129,9 +161,6 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
 
         sidePanel.add(infoPanel);
 
-        //playerTilesLabel = new JLabel("Tiles: " + model.getCurrentPlayer().printTiles());
-        //playerPanel.add(playerTilesLabel);
-
 
         //Panel for place word and pass turn buttons
         JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
@@ -161,45 +190,36 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         sidePanel.add(buttonPanel);
         playerOptionPanel.add(sidePanel);
 
-
-        //Panel to describe what each coloured square means
-        JPanel legendPanel = new JPanel(new GridLayout(4,1));
-        legendPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
-
-        JLabel DLS = new JLabel("Double Letter Square");
-        DLS.setForeground(DLSCOLOR);
-        DLS.setBorder(BorderFactory.createLineBorder(DLSCOLOR, 4));
-        legendPanel.add(DLS);
-
-        JLabel TLS = new JLabel("Triple Letter Square");
-        TLS.setForeground(TLSCOLOR);
-        TLS.setBorder(BorderFactory.createLineBorder(TLSCOLOR, 4));
-        legendPanel.add(TLS);
-
-        JLabel DWS = new JLabel("Double Word Square");
-        DWS.setForeground(DWSCOLOR);
-        DWS.setBorder(BorderFactory.createLineBorder(DWSCOLOR, 4));
-        legendPanel.add(DWS);
-
-        JLabel TWS = new JLabel("Triple Word Square");
-        TWS.setForeground(TWSCOLOR);
-        TWS.setBorder(BorderFactory.createLineBorder(TWSCOLOR, 4));
-        legendPanel.add(TWS);
-
-
-        add(boardPanel, BorderLayout.CENTER);
-        add(legendPanel, BorderLayout.EAST);
-        add(playerPanel, BorderLayout.NORTH);
         add(playerOptionPanel, BorderLayout.SOUTH);
-
-        //setPremiumSquares();
-
-        pack();
-        setSize(1000,900);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
+    /**
+     * GUI to display the current player and all players' points
+     */
+    public void setPlayerPanel(){
+        //Add labels for the current player and their tiles
+        JPanel playerPanel = new JPanel(new GridLayout(2, 1));
+        currentPlayerLabel = new JLabel("Current Player: " + model.getCurrentPlayer().getName(), SwingConstants.CENTER);
+        playerPanel.add(currentPlayerLabel);
+
+        //Add labels for the players' points
+        JPanel pointPanel = new JPanel(new GridLayout(1,4));
+        player1Points = new JLabel("Player 1 Points: " + 0);
+        player2Points = new JLabel("Player 2 Points: 0");
+        player3Points = new JLabel("Player 3 Points: 0");
+        player4Points = new JLabel("Player 4 Points: 0");
+        pointPanel.add(player1Points);
+        pointPanel.add(player2Points);
+        pointPanel.add(player3Points);
+        pointPanel.add(player4Points);
+        playerPanel.add(pointPanel);
+
+        add(playerPanel, BorderLayout.NORTH);
+    }
+
+    /**
+     * Used to set the number of users that will be playing Scrabble and how many of them will be AI
+     */
     private void setNumOfPlayers(){
         int totalPlayers = -1;
 
@@ -240,51 +260,72 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         NUMOFPLAYERS = numOfAiPlayers + numOfRealPlayers;
     }
 
+    /**
+     * Getter method for the word that is being placed on the board
+     * @return the word being placed on the board
+     */
     public String getWordToPlaced(){
         return wordToPlace.getText();
     }
 
+    /**
+     * Setter method for the word being placed on the board
+     * @param s the String that will be placed on the board
+     */
     public void setWordToPlace(String s){
         wordToPlace.setText(s);
     }
 
+    /**
+     * Check the text of a cell on the Scrabble board
+     * @param row the row of the cell
+     * @param col the column of the cell
+     * @return the text of the cell
+     */
     public String checkCellBlank(int row, int col){
         return boardButtons[row][col].getText();
     }
 
+    /**
+     * Check that a word is valid in the dictionary
+     * @param word the word we are checking for
+     * @return true if the word is valid, false otherwise
+     */
     public boolean checkValidWord(String word){
         return dictionary.isValidWord(word);
     }
 
+    /**
+     * Let the user know what their selection of row and column is for placing a word on the board
+     * @param row the row that the user is setting
+     * @param col the column that the user is setting
+     */
     public void setRowCol(int row, int col){
         this.row.setText("Row: " + row);
         this.col.setText("Col: " + col);
     }
 
+    /**
+     * Clearing the text of the row and column labels (i.e. the user has not made a selection for a row and column)
+     */
     public void clearRowCol(){
         row.setText("Row: ");
         col.setText("Col: ");
     }
 
+    /**
+     * Let the user know what their selection of orientation (horizontal or vertical) is for placing a word on the board
+     * @param orient the orientation the user is setting
+     */
     public void setOrientation(String orient){
         this.orientation.setText("Orientation: " + orient);
     }
 
+    /**
+     * Clearing the text of the orientation label (i.e. the user has not made a selection for the orientation)
+     */
     public void clearOrientation(){
         orientation.setText("Orientation: ");
-    }
-
-    public static boolean getPlayerType(int playerID){
-        //if player is the first one, has to be normal player
-        if (playerID == 1){
-            return false;
-        }
-
-        //show Joption pane for deciding
-        String message = "What is the player type for player " + playerID + "?";
-        int playerChoice = JOptionPane.showOptionDialog(null, message, "Select Player Type", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Normal", "AI"}, "Normal");
-
-        return playerChoice != 0; //true if AI, false if normal
     }
 
     /**
@@ -313,7 +354,6 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
                 break;
         }
     }
-
 
     /**
      * Method used to update the GUI when a player places a word

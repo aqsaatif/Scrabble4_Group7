@@ -7,8 +7,11 @@ import java.awt.event.ActionListener;
  * @author Basma Mohammed
  * @version 1, November 10, 2024
  *
- *@author Aqsa Atif, Yomna Ibrahim
+ * @author Aqsa Atif, Yomna Ibrahim
  * @version 2, November 11, 2024
+ *
+ * @author Aqsa Atif
+ * @version 4 November 29, 2024
  */
 public class ScrabbleController implements ActionListener {
     ScrabbleModel scrabbleModel;
@@ -36,18 +39,15 @@ public class ScrabbleController implements ActionListener {
             }
 
             else {
-                // Get inputs from the view
-//                String word = view.getWord();
-//                rowNum = view.getRow();
-//                colNum = view.getColumn();
-//                isHorizontal = view.getOrientation();
 
-                if (rowNum > 0 && colNum > 0 && !word.equals("") && orientation && view.checkValidWord(word)){
+                if (rowNum > 0 && colNum > 0 && !word.isEmpty() && orientation && view.checkValidWord(word)){ //Check that everything has been inputted and its valid
                     String[] result = scrabbleModel.placeWord(word, rowNum, colNum, isHorizontal, currentPlayer);
 
                     if (result[0].equals("false")) { //Word has not been placed on the board
                         JOptionPane.showMessageDialog(view, "Invalid word or placement!");
                         view.setWordToPlace("");
+                        view.clearOrientation();
+                        view.clearRowCol();
                     } else { //Word has been placed on the board
                         scrabbleModel.currentPlayer.replaceTiles(result[1], word, scrabbleModel.getTileSet());
                         scrabbleModel.updatePlaceWord(word, rowNum, colNum, isHorizontal); //Update the GUI
@@ -60,7 +60,7 @@ public class ScrabbleController implements ActionListener {
                     view.clearOrientation();
                     view.clearRowCol();
                 }
-
+                //reset the input
                 rowNum = -1;
                 colNum = -1;
                 word = "";
@@ -71,12 +71,12 @@ public class ScrabbleController implements ActionListener {
 
         } else if (buttonPressed.equals("Horizontal")){
             isHorizontal = true;
-            orientation = true;
-            view.setOrientation("H");
+            orientation = true; //an orientation has been picked
+            view.setOrientation("H"); //letting the user know
         } else if (buttonPressed.equals("Vertical")){
             isHorizontal = false;
-            orientation = true;
-            view.setOrientation("V");
+            orientation = true; //an orientation has been picked
+            view.setOrientation("V"); //letting the user know
         } else if (buttonPressed.length() == 1){ //tile button is pressed
             word = view.getWordToPlaced();
 
@@ -87,27 +87,28 @@ public class ScrabbleController implements ActionListener {
                 if (letter == null || word.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Invalid. Try again.");
                 } else {
-                    word += letter;
+                    word += letter.toLowerCase(); //update the word being placed with the new letter
                 }
             } else{
-                word += buttonPressed.toLowerCase();
+                word += buttonPressed.toLowerCase(); //update the word being placed with the new letter
             }
 
-            view.setWordToPlace(word);
+            view.setWordToPlace(word); //inform user
 
         } else if(buttonPressed.matches("\\d+ \\d+")){ //cell of the Scrabble board is pressed
             String[] position = e.getActionCommand().split(" ");
-            String letter = view.checkCellBlank(Integer.parseInt(position[0]),Integer.parseInt(position[1]));
+            String letter = view.checkCellBlank(Integer.parseInt(position[0]),Integer.parseInt(position[1])); //check if using a word already on the board
 
             if (!letter.equals(" ")){ //using a letter already on the board
-                word += letter;
+                word += letter; //update the word being placed with the new letter
                 view.setWordToPlace(word);
             }
 
+            //Store the position
             rowNum = Integer.parseInt(position[0]) + 1;
             colNum = Integer.parseInt(position[1]) + 1;
 
-            view.setRowCol(rowNum, colNum);
+            view.setRowCol(rowNum, colNum); //inform user
 
         }
     }
