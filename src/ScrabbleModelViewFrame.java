@@ -87,6 +87,29 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         pointPanel.add(player4Points);
         playerPanel.add(pointPanel);
 
+        //Add the menu bar and menu items
+        JMenuBar menuBar = new JMenuBar();
+
+        //JMenu
+        JMenu fileMenu = new JMenu("File");
+        JMenu editMenu = new JMenu("Edit");
+
+        //JMenu Items
+        JMenuItem saveGame = new JMenuItem("Save Game");
+        JMenuItem loadGame = new JMenuItem("Load Game");
+        JMenuItem undoMove = new JMenuItem("Undo");
+        JMenuItem redoMove = new JMenuItem("Redo");
+
+        fileMenu.add(saveGame);
+        fileMenu.add(loadGame);
+        editMenu.add(undoMove);
+        editMenu.add(redoMove);
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+
+        setJMenuBar(menuBar);
+
         //Panel for place word and pass turn buttons
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
 
