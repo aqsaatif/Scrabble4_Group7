@@ -35,6 +35,10 @@ public class ScrabbleModel {
 
     private int currentPlayerIndex = 0;
 
+    private Stack undoStack;
+
+    private Stack redoStack;
+
     public ScrabbleModel(int numOfRealPlayers, int numOfAiPlayers) {
         board = new char[SIZE][SIZE];
         for (int i =0; i< SIZE; i++){
@@ -491,4 +495,17 @@ public class ScrabbleModel {
 
         return check;
     }
+
+    /**
+     * Method used to push onto the undo/redo stack
+     * @param
+     */
+    public void pushUndo(char[][] board, int currentPlayerIndex, List<Integer> scores){
+        //save the game state
+        GameState gs = new GameState(board, currentPlayerIndex, scores);
+
+
+    }
 }
+
+

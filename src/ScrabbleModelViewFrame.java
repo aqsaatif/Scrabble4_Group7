@@ -437,7 +437,7 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
      * Method used to get the orientation, horizontal (H) or vertical (V), of the word placement
      * @return true if H, false if V
      */
-    public Boolean getOrientation(){
+    public boolean getOrientation(){
         // Ask for orientation
         String orientation = JOptionPane.showInputDialog(null, "Enter orientation (H for horizontal, V for vertical):");
 
