@@ -112,6 +112,7 @@ public class ScrabbleController implements ActionListener {
 
         }else if (buttonPressed.equals("Undo")){
             System.out.println("undo");
+            //scrabbleModel.popUndo();
         }else if (buttonPressed.equals("Redo")){
             System.out.println("redo");
         }else if (buttonPressed.equals("Save Game")){

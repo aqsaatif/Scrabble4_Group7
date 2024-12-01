@@ -500,11 +500,15 @@ public class ScrabbleModel {
      * Method used to push onto the undo stack
      * @param board the current board
      * @param currentPlayerIndex the current player index before incrementing
-     * @param scores the current scores of all players
+     * @param players the current players
      */
-    public void pushUndo(char[][] board, int currentPlayerIndex, List<Integer> scores){
+    public void pushUndo(char[][] board, int currentPlayerIndex, List<Player> players){
         //save the game state
-        GameState gs = new GameState(board, currentPlayerIndex, scores);
+        List<Player> tempPlayers = new ArrayList<>();
+        for (Player player : players) {
+            tempPlayers.add(new Player(player));
+        }
+        GameState gs = new GameState(board, currentPlayerIndex, tempPlayers);
         undoStack.push(gs);
 
     }
@@ -513,11 +517,11 @@ public class ScrabbleModel {
      * Method used to push onto the redo stack
      * @param board the current board
      * @param currentPlayerIndex the current player index before incrementing
-     * @param scores the current scores of all players
+     * @param players the current scores of all players
      */
-    public void pushRedo(char[][] board, int currentPlayerIndex, List<Integer> scores){
+    public void pushRedo(char[][] board, int currentPlayerIndex, List<Player> players){
         //save the game state
-        GameState gs = new GameState(board, currentPlayerIndex, scores);
+        GameState gs = new GameState(board, currentPlayerIndex, players);
         redoStack.push(gs);
     }
 

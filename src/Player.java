@@ -26,6 +26,16 @@ public class Player {
         this.tiles = new ArrayList<>();
         this.isAI = false;
     }
+    /**
+     * Constructs a new player
+     * @param player Player object to use as constructor
+     */
+    public Player(Player player) {
+        this.name = player.name;
+        this.score = player.score;
+        this.tiles = player.tiles;
+        this.isAI = player.isAI;
+    }
 
     public boolean isAI() {
         return isAI;

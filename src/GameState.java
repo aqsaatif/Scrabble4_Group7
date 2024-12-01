@@ -5,17 +5,17 @@ public class GameState {
 
     private char[][] board;
     private int currentPlayerIndex;
-    private List<Integer> scores = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
 
-    public GameState(char[][] board, int currentPlayerIndex, List<Integer> scores) {
+    public GameState(char[][] board, int currentPlayerIndex, List<Player> players) {
         this.board = board;
         this.currentPlayerIndex = currentPlayerIndex;
-        this.scores = scores;
+        this.players = players;
     }
 
     //getters
     public char[][] getBoard() {return board;}
-    public List<Integer> getScores() { return scores; }
+    public List<Player> getPlayers() { return players; }
     public int getCurrentPlayerIndex() { return currentPlayerIndex; }
 
 }
