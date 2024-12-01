@@ -3,6 +3,7 @@
  * @author Lujain Jdue
  * @version 1, November 12, 2024
  *
+ * @version 2, December 1, 2024 
  */
 import javax.swing.*;
 import java.util.*;
@@ -61,7 +62,7 @@ public class ScrabbleAI{
                     for (String word: possibleWords){
                         //check if the word is a valid move
                         String[] check = model.checkWord(word, row, col, isHorizontal, aiPlayer);
-                        if (dictionary.isValidWord(word) && check[0].equals("true")){
+                        if (dictionary.isValidWord(word) && check[0].equals("true") && isValidPlacement(word, row, col, isHorizontal){
                             if (bestMove == null || word.length() > bestMove.word.length()) {
                                 bestMove = new Move(word, row, col, isHorizontal);
 
@@ -135,6 +136,30 @@ public class ScrabbleAI{
         }
         return score;
     }
+    
+    private static boolean isValidPlacement(String word, int row, int col, boolean isHorizontal){
+        char[][] board = model.getBoard();
+
+        for (int i = 0; i < word.length(); i++){
+            char letter = word.charAt(i);
+            int r = row + (isHorizontal ? 0: i);
+            int c = col + (isHorizontal ? 0: i);
+
+            // Check if the position is out of bounds
+            if (r < 0 || r >= ScrabbleModel.SIZE || c < 0 || c >= ScrabbleModel.SIZE) {
+                return false;
+            }
+            // Check if the square is occupied
+            char boardChar = board[r][c];
+            if (boardChar != ' ' && boardChar != letter) {
+                return false; // Square is occupied with a different letter
+            }
+
+
+        }
+        return true;
+    }
+    
 
     /*
 
