@@ -497,14 +497,40 @@ public class ScrabbleModel {
     }
 
     /**
-     * Method used to push onto the undo/redo stack
-     * @param
+     * Method used to push onto the undo stack
+     * @param board the current board
+     * @param currentPlayerIndex the current player index before incrementing
+     * @param scores the current scores of all players
      */
     public void pushUndo(char[][] board, int currentPlayerIndex, List<Integer> scores){
         //save the game state
         GameState gs = new GameState(board, currentPlayerIndex, scores);
+        undoStack.push(gs);
 
+    }
 
+    /**
+     * Method used to push onto the redo stack
+     * @param board the current board
+     * @param currentPlayerIndex the current player index before incrementing
+     * @param scores the current scores of all players
+     */
+    public void pushRedo(char[][] board, int currentPlayerIndex, List<Integer> scores){
+        //save the game state
+        GameState gs = new GameState(board, currentPlayerIndex, scores);
+        redoStack.push(gs);
+    }
+
+    /**
+     * Method used to pop from the undo stack
+     */
+    public void popUndo(){
+
+        GameState gs = (GameState) undoStack.pop();
+
+        this.board = gs.getBoard();
+        this.currentPlayerIndex = gs.getCurrentPlayerIndex();
+        //scores
     }
 }
 

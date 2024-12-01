@@ -80,6 +80,7 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         add(boardPanel, BorderLayout.CENTER);
 
         //Set up GUI
+        setMenus();
         setPlayerPanel();
         setPlayerOptionPanel();
         setLegendPanel();
@@ -90,6 +91,35 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         setSize(1000,900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+    /**
+     * The menu bars and items set up
+     */
+    private void setMenus() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenu editMenu = new JMenu("Edit");
+
+        JMenuItem undoMenuItem = new JMenuItem("Undo");
+        JMenuItem redoMenuItem = new JMenuItem("Redo");
+        JMenuItem saveMenuItem = new JMenuItem("Save Game");
+        JMenuItem loadMenuItem = new JMenuItem("Load Game");
+
+        undoMenuItem.addActionListener(controller);
+        redoMenuItem.addActionListener(controller);
+        saveMenuItem.addActionListener(controller);
+        loadMenuItem.addActionListener(controller);
+
+        fileMenu.add(loadMenuItem);
+        fileMenu.add(saveMenuItem);
+        editMenu.add(undoMenuItem);
+        editMenu.add(redoMenuItem);
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+
+        setJMenuBar(menuBar);
     }
 
     /**

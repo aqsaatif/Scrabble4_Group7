@@ -62,7 +62,7 @@ public class ScrabbleAI{
                     for (String word: possibleWords){
                         //check if the word is a valid move
                         String[] check = model.checkWord(word, row, col, isHorizontal, aiPlayer);
-                        if (dictionary.isValidWord(word) && check[0].equals("true") && isValidPlacement(word, row, col, isHorizontal){
+                        if (dictionary.isValidWord(word) && check[0].equals("true") && isValidPlacement(word, row, col, isHorizontal)){
                             if (bestMove == null || word.length() > bestMove.word.length()) {
                                 bestMove = new Move(word, row, col, isHorizontal);
 

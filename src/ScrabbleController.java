@@ -110,6 +110,14 @@ public class ScrabbleController implements ActionListener {
 
             view.setRowCol(rowNum, colNum); //inform user
 
+        }else if (buttonPressed.equals("Undo")){
+            System.out.println("undo");
+        }else if (buttonPressed.equals("Redo")){
+            System.out.println("redo");
+        }else if (buttonPressed.equals("Save Game")){
+            System.out.println("save game");
+        }else if (buttonPressed.equals("Load Game")){
+            System.out.println("load game");
         }
     }
 }
