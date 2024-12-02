@@ -33,7 +33,12 @@ public class Player {
     public Player(Player player) {
         this.name = player.name;
         this.score = player.score;
-        this.tiles = player.tiles;
+
+        List<Tile> tempTiles = new ArrayList<>();
+        for (Tile tile : player.getTiles()) {
+            tempTiles.add(new Tile(tile));
+        }
+        this.tiles = tempTiles;
         this.isAI = player.isAI;
     }
 

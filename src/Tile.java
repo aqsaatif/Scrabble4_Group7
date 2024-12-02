@@ -31,6 +31,13 @@ public class Tile {
         initTileScores();
     }
 
+    public Tile(Tile tile) {
+        this.letter = tile.letter;
+        this.value = tile.value;
+        this.tileScores = new HashMap<String, Integer>();
+        initTileScores();
+    }
+
     /**
      * Initializes each tile score by letter.
      */

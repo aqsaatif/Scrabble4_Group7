@@ -74,6 +74,12 @@ public class ScrabbleModel {
 
         loadPremiumSquaresFromXML("premiumSquaresXML.txt");
 
+        //initialize redo and undo stack
+        undoStack = new Stack();
+        redoStack = new Stack();
+
+        //empty board onto the undo stack
+        //pushUndo(board, currentPlayerIndex, players);
     }
 
     /**
@@ -239,7 +245,7 @@ public class ScrabbleModel {
         currentPlayer = players.get(currentPlayerIndex);
 
         for (ScrabbleModelView view: views){ //Update the views
-            view.handleScrabblePassTurnUpdate(new ScrabbleEvent(this, board, currentPlayer));
+            view.handleScrabblePassTurnUpdate(new ScrabbleEvent(this, board, currentPlayer,players));
         }
     }
 
@@ -352,6 +358,7 @@ public class ScrabbleModel {
                 boolean empty = checkEmptyBoard();
 
                 if(inHand && validLocation|| inHand && empty) {
+                    pushUndo(board, currentPlayerIndex, players);
                     for (int i = 0; i < word.length(); i++) { //Place the word on the board
                         board[row - 1][col + i - 1] = word.charAt(i); //Print word in correct position
                     }
@@ -385,6 +392,7 @@ public class ScrabbleModel {
                 boolean empty = checkEmptyBoard();
 
                 if (inHand && validLocation || inHand && empty) {
+                    pushUndo(board, currentPlayerIndex, players);
                     for (int i = 0; i < word.length(); i++) {
                         board[row + i - 1][col - 1] = word.charAt(i); //Print word in correct position
                     }
@@ -410,7 +418,7 @@ public class ScrabbleModel {
      */
     public void updatePlaceWord(String word, int row, int column, boolean isHorizontal){
         currentPlayer.calculatePoints(word, row, column, isHorizontal, premiumSquares); //Get the updated player points
-        ScrabbleEvent event = new ScrabbleEvent(this, board, getCurrentPlayer());
+        ScrabbleEvent event = new ScrabbleEvent(this, board, getCurrentPlayer(), players);
         for (ScrabbleModelView view : views) {
             view.handleScrabbleStatusUpdate(event);
         }
@@ -503,14 +511,22 @@ public class ScrabbleModel {
      * @param players the current players
      */
     public void pushUndo(char[][] board, int currentPlayerIndex, List<Player> players){
-        //save the game state
+        //deep copy of the current players + their scores
         List<Player> tempPlayers = new ArrayList<>();
         for (Player player : players) {
             tempPlayers.add(new Player(player));
         }
-        GameState gs = new GameState(board, currentPlayerIndex, tempPlayers);
-        undoStack.push(gs);
 
+        //deep copy the board
+        char[][] tempBoard = Arrays.stream(board)
+                                .map(char[]::clone) // Clone each row
+                                .toArray(char[][]::new); //store in a new array
+
+        //make a new game state object
+        GameState gs = new GameState(tempBoard, currentPlayerIndex, tempPlayers);
+
+        //push it onto the stack
+        undoStack.push(gs);
     }
 
     /**
@@ -520,21 +536,63 @@ public class ScrabbleModel {
      * @param players the current scores of all players
      */
     public void pushRedo(char[][] board, int currentPlayerIndex, List<Player> players){
-        //save the game state
-        GameState gs = new GameState(board, currentPlayerIndex, players);
+        //deep copy of the current players + their scores
+        List<Player> tempPlayers = new ArrayList<>();
+        for (Player player : players) {
+            tempPlayers.add(new Player(player));
+        }
+
+        //deep copy the board
+        char[][] tempBoard = Arrays.stream(board)
+                .map(char[]::clone) // Clone each row
+                .toArray(char[][]::new); //store in a new array
+
+        //make a new game state object
+        GameState gs = new GameState(tempBoard, currentPlayerIndex, tempPlayers);
+
+        //push to redo stack
         redoStack.push(gs);
     }
 
     /**
      * Method used to pop from the undo stack
      */
-    public void popUndo(){
+    public GameState popUndo(){
 
         GameState gs = (GameState) undoStack.pop();
 
         this.board = gs.getBoard();
         this.currentPlayerIndex = gs.getCurrentPlayerIndex();
-        //scores
+        this.currentPlayer = gs.getPlayers().get(currentPlayerIndex);
+        this.players = gs.getPlayers();
+
+        return gs;
+    }
+
+    /**
+     * Method used to pop from the redo stack
+     */
+    public GameState popRedo(){
+
+        GameState gs = (GameState) redoStack.pop();
+
+        this.board = gs.getBoard();
+        this.currentPlayerIndex = gs.getCurrentPlayerIndex();
+        this.currentPlayer = gs.getPlayers().get(currentPlayerIndex);
+        this.players = gs.getPlayers();
+
+        return gs;
+    }
+
+    public void updateUndoRedo(char[][] newBoard, List<Player> newPlayers){
+
+        for (ScrabbleModelView view: views){ //Update the views
+            view.handleScrabbleUndoRedoUpdate(new ScrabbleEvent(this, newBoard, currentPlayer, newPlayers));
+        }
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
     }
 }
 

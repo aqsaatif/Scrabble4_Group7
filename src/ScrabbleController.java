@@ -49,6 +49,7 @@ public class ScrabbleController implements ActionListener {
                         view.clearOrientation();
                         view.clearRowCol();
                     } else { //Word has been placed on the board
+
                         scrabbleModel.currentPlayer.replaceTiles(result[1], word, scrabbleModel.getTileSet());
                         scrabbleModel.updatePlaceWord(word, rowNum, colNum, isHorizontal); //Update the GUI
                         scrabbleModel.changeTurn(); //Change the player's turns
@@ -67,7 +68,9 @@ public class ScrabbleController implements ActionListener {
                 orientation = false;
             }
         } else if (buttonPressed.equals("Pass Turn")) { //Pass turn button is pressed
+            scrabbleModel.pushUndo(scrabbleModel.getBoard(), scrabbleModel.getCurrentPlayerIndex(), scrabbleModel.getPlayers());
             scrabbleModel.changeTurn();
+
 
         } else if (buttonPressed.equals("Horizontal")){
             isHorizontal = true;
@@ -111,10 +114,15 @@ public class ScrabbleController implements ActionListener {
             view.setRowCol(rowNum, colNum); //inform user
 
         }else if (buttonPressed.equals("Undo")){
-            System.out.println("undo");
-            //scrabbleModel.popUndo();
+            scrabbleModel.pushRedo(scrabbleModel.getBoard(),scrabbleModel.getCurrentPlayerIndex(),scrabbleModel.getPlayers());
+            GameState gs = scrabbleModel.popUndo();
+            scrabbleModel.updateUndoRedo(gs.getBoard(),gs.getPlayers());
+
         }else if (buttonPressed.equals("Redo")){
-            System.out.println("redo");
+            scrabbleModel.pushUndo(scrabbleModel.getBoard(),scrabbleModel.getCurrentPlayerIndex(),scrabbleModel.getPlayers());
+            GameState gs = scrabbleModel.popRedo();
+            scrabbleModel.updateUndoRedo(gs.getBoard(),gs.getPlayers());
+
         }else if (buttonPressed.equals("Save Game")){
             System.out.println("save game");
         }else if (buttonPressed.equals("Load Game")){

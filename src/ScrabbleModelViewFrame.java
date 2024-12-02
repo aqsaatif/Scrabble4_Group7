@@ -448,6 +448,27 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         }
     }
 
+    @Override
+    public void handleScrabbleUndoRedoUpdate(ScrabbleEvent e) {
+        char[][] board = e.getBoard();
+
+        // Update the board buttons based on the new board state
+        for (int i = 0; i < ScrabbleModel.SIZE; i++) {
+            for (int j = 0; j < ScrabbleModel.SIZE; j++) {
+                boardButtons[i][j].setText(String.valueOf(board[i][j]));
+            }
+        }
+
+        //handle the current player update
+        handleScrabblePassTurnUpdate(e);
+
+        //players points
+        player1Points.setText("Player 1 Points: " + e.getPlayers().get(0).getScore());
+        player2Points.setText("Player 2 Points: " + e.getPlayers().get(1).getScore());
+        player3Points.setText("Player 3 Points: " + e.getPlayers().get(2).getScore());
+        player4Points.setText("Player 4 Points: " + e.getPlayers().get(3).getScore());
+    }
+
     /**
      * Method used to get the word the user wants to place on the board
      * @return the word the user wants to place

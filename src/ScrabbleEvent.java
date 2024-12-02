@@ -7,9 +7,12 @@
  * @version 2, November 11, 2024
  */
 import java.util.EventObject;
+import java.util.List;
+
 public class ScrabbleEvent extends EventObject {
     char[][] board;
     Player currentPlayer;
+    private List<Player> players;
 
     /**
      *Class constructor
@@ -17,10 +20,11 @@ public class ScrabbleEvent extends EventObject {
      *@param board char[][] for the game
      * currPlayer the currentplayer for the game
      */
-    public ScrabbleEvent(ScrabbleModel model, char[][] board, Player currPlayer){
+    public ScrabbleEvent(ScrabbleModel model, char[][] board, Player currPlayer, List<Player> players) {
         super(model);
         this.board= board;
         currentPlayer = currPlayer;
+        this.players = players;
 
     }
 
@@ -40,4 +44,7 @@ public class ScrabbleEvent extends EventObject {
         return board;
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
 }
