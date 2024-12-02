@@ -463,10 +463,18 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         handleScrabblePassTurnUpdate(e);
 
         //players points
-        player1Points.setText("Player 1 Points: " + e.getPlayers().get(0).getScore());
-        player2Points.setText("Player 2 Points: " + e.getPlayers().get(1).getScore());
-        player3Points.setText("Player 3 Points: " + e.getPlayers().get(2).getScore());
-        player4Points.setText("Player 4 Points: " + e.getPlayers().get(3).getScore());
+        switch(NUMOFPLAYERS) {
+            case 4:
+                player4Points.setText(e.getPlayers().get(3).getName()+" Points: " + e.getPlayers().get(3).getScore());
+            case 3:
+                player3Points.setText(e.getPlayers().get(2).getName()+" Points: " + e.getPlayers().get(2).getScore());
+            default:
+                player1Points.setText("Player 1 Points: " + e.getPlayers().get(0).getScore());
+                player2Points.setText(e.getPlayers().get(1).getName()+" Points: " + e.getPlayers().get(1).getScore());
+                break;
+
+        }
+
     }
 
     /**
