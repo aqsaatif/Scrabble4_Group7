@@ -144,7 +144,7 @@ public class ScrabbleModel {
     /**
      * Set the premium squares on the board
      */
-    private void initializePremiumSquares() {
+    void initializePremiumSquares() {
         // Double letter squares
         premiumSquares[0][3] = 2; premiumSquares[0][11] = 2;
         premiumSquares[3][0] = 2; premiumSquares[3][7] = 2; premiumSquares[3][14] = 2;
