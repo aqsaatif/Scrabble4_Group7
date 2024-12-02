@@ -2,12 +2,93 @@
     <row number="0">
         <square col="0" type="TWS" />
         <square col="3" type="DLS" />
-        <square col="7" type="DWS" />
+        <square col="7" type="TWS" />
+        <square col="11" type="DLS" />
+        <square col="14" type="TWS" />
     </row>
     <row number="1">
-        <square col="7" type="TLS" />
+        <square col="1" type="DWS" />
+        <square col="5" type="TLS" />
+        <square col="9" type="TLS" />
+        <square col="13" type="DWS" />
     </row>
     <row number="2">
-        <square col="6" type="DWS" />
+        <square col="2" type="DWS" />
+        <square col="6" type="DLS" />
+        <square col="8" type="DLS" />
+        <square col="12" type="DWS" />
     </row>
+    <row number="3">
+        <square col="3" type="DWS" />
+        <square col="0" type="DLS" />
+        <square col="7" type="DLS" />
+        <square col="14" type="DLS" />
+        <square col="11" type="DWS" />
+    </row>
+    <row number="4">
+        <square col="4" type="DWS" />
+        <square col="10" type="DWS" />
+    </row>
+    <row number="5">
+        <square col="5" type="TLS" />
+        <square col="1" type="TLS" />
+        <square col="13" type="TLS" />
+        <square col="9" type="TLS" />
+    </row>
+    <row number="6">
+        <square col="6" type="DLS" />
+        <square col="2" type="DLS" />
+        <square col="12" type="DLS" />
+        <square col="8" type="DLS" />
+    </row>
+    <row number="7">
+        <square col="0" type="TWS" />
+        <square col="3" type="DLS" />
+        <square col="7" type="DWS" />
+        <square col="11" type="DLS" />
+        <square col="14" type="TWS" />
+    </row>
+    <row number="8">
+        <square col="8" type="DLS" />
+        <square col="2" type="DLS" />
+        <square col="12" type="DLS" />
+        <square col="6" type="DLS" />
+    </row>
+    <row number="9">
+        <square col="9" type="TLS" />
+        <square col="1" type="TLS" />
+        <square col="13" type="TLS" />
+        <square col="5" type="TLS" />
+    </row>
+    <row number="10">
+        <square col="10" type="DWS" />
+        <square col="4" type="DWS" />
+    </row>
+    <row number="11">
+        <square col="11" type="DWS" />
+        <square col="0" type="DLS" />
+        <square col="7" type="DLS" />
+        <square col="14" type="DLS" />
+        <square col="3" type="DWS" />
+    </row>
+    <row number="12">
+        <square col="12" type="DWS" />
+        <square col="6" type="DLS" />
+        <square col="8" type="DLS" />
+        <square col="2" type="DWS" />
+    </row>
+    <row number="13">
+        <square col="13" type="DWS" />
+        <square col="5" type="TLS" />
+        <square col="9" type="TLS" />
+        <square col="1" type="DWS" />
+    </row>
+    <row number="14">
+        <square col="14" type="TWS" />
+        <square col="3" type="DLS" />
+        <square col="7" type="TWS" />
+        <square col="11" type="DLS" />
+        <square col="0" type="TWS" />
+    </row>
+
 </scrabbleBoard>
