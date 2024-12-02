@@ -81,6 +81,7 @@ public class ScrabbleAI{
             System.out.println("AI played: " + bestMove.word );
         }else {
             //System.out.println("AI passes turn - no legal moves");
+            model.pushUndo(model.getBoard(), model.getCurrentPlayerIndex(), model.getPlayers());
             JOptionPane.showMessageDialog(null, "AI passes turn");
             model.changeTurn();
         }
