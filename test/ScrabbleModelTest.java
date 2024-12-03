@@ -24,6 +24,7 @@ public class ScrabbleModelTest {
     private Player player2;
     private Player player3;
     private List<Tile> tiles, tiles2, tiles3;
+    List<Player> players = new ArrayList<>();
     private String word1 = "task";
     private String word2 = "kits";
 
@@ -47,6 +48,10 @@ public class ScrabbleModelTest {
         player2 = new Player("Player 2");
         player3 = new Player("AI Player 1");
         player3.setIsAI(true);
+
+        players.add(player1);
+        players.add(player2);
+        players.add(player3);
 
         ai = new ScrabbleAI(model, new Dictionary());
 
