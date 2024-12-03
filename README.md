@@ -10,4 +10,4 @@ Changes that were made Since the Last Deliverable:
 
 Known Issues: 
 
-Roadmap Ahead: 
+Roadmap Ahead: Scrabble game is complete. Potential additional features and enhancement could be added. 
