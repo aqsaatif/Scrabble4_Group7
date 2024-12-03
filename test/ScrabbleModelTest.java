@@ -6,6 +6,8 @@
  * @author Yomna Ibrahim
  * @version 2, November 24, 2024
  *
+ * @author Lujain Jdue 
+ * @version 3, December 2, 2024
  */
 
 import org.junit.Before;
@@ -241,4 +243,59 @@ public class ScrabbleModelTest {
         model.placeWord(word1, 7, 7, true, player1);
         assertEquals(7, player1.getTiles().size());
     }
+    
+    /**
+     * test that the undo/redo functionality is working
+     */
+    @Test
+    public void testUndoRedo() {
+        player1.addTiles(tiles);
+        model.placeWord(word1, row, col, true, player1);
+        board = model.getBoard();
+
+        model.pushRedo(board, 0, players);
+        GameState gs = model.popUndo(); //undo the last action
+        model.updateUndoRedo(gs.getBoard(), gs.getPlayers());
+
+        assertEquals(' ', model.getBoard()[row - 1][col - 1]);
+
+        model.pushUndo(board, 0, players); //redo the action
+        GameState gs2 = model.popRedo();
+        model.updateUndoRedo(gs.getBoard(), gs2.getPlayers());
+
+        assertEquals(word1.charAt(0), model.getBoard()[row - 1][col - 1]); //ensure the word is redone
+    }
+
+    /**
+     * test that the save/load functionality is working
+     */
+    @Test
+    public void testSaveLoad(){
+        player1.addTiles(tiles);
+        model.placeWord(word1, row, col, true, player1);
+
+        //save the game state
+        model.saveGame("testSave.json");
+
+        //create new model and load the saved game
+        ScrabbleModel newModel = new ScrabbleModel(2, 1);
+        newModel.loadGame("testSave.json");
+
+        assertEquals(word1.charAt(0), newModel.getBoard()[row-1][col-1]); //ensure the word that was saved is loaded correctly
+    }
+
+    /**
+     * test that custom boards are working properly
+     */
+    @Test
+    public void testCustomBoard(){
+       //load the premium square from the XML file
+        model.loadPremiumSquaresFromXML("premiumSquaresXML.txt");
+        //check that specific premium squares are loaded correctly
+        assertEquals(5, model.getPremiumSquares()[0][0]);
+        assertEquals(2, model.getPremiumSquares()[0][3]);
+        assertEquals(4, model.getPremiumSquares()[1][1]);
+        assertEquals(3, model.getPremiumSquares()[1][5]);
+    }
+
 }
