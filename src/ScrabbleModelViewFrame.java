@@ -477,6 +477,37 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
 
     }
 
+    @Override
+    public void handleScrabbleLoadUpdate(ScrabbleEvent e) {
+        char[][] board = e.getBoard();
+        // Update the board buttons based on the new board state
+        for (int i = 0; i < ScrabbleModel.SIZE; i++) {
+            for (int j = 0; j < ScrabbleModel.SIZE; j++) {
+                boardButtons[i][j].setText(String.valueOf(board[i][j]));
+            }
+        }
+
+        // Update the current player label
+        currentPlayerLabel.setText("Current Player: " + e.getCurrentPlayer().getName());
+
+        // Update player tiles
+        ArrayList<Tile> playerHand = e.getCurrentPlayer().getTiles();
+        for (int i = 0; i < 7; i++) {
+            playerTiles[i].setText(playerHand.get(i).getLetter() + " (" + playerHand.get(i).getValue() + ")");
+            playerTiles[i].setActionCommand(playerHand.get(i).getLetter());
+        }
+
+        // Update player scores
+        player1Points.setText(e.getPlayers().get(0).getName() + " Points: " + e.getPlayers().get(0).getScore());
+        player2Points.setText(e.getPlayers().get(1).getName() + " Points: " + e.getPlayers().get(1).getScore());
+        if (e.getPlayers().size() > 2) {
+            player3Points.setText(e.getPlayers().get(2).getName() + " Points: " + e.getPlayers().get(2).getScore());
+        }
+        if (e.getPlayers().size() > 3) {
+            player4Points.setText(e.getPlayers().get(3).getName() + " Points: " + e.getPlayers().get(3).getScore());
+        }
+    }
+
     /**
      * Method used to get the word the user wants to place on the board
      * @return the word the user wants to place

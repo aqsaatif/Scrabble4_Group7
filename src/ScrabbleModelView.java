@@ -6,8 +6,8 @@
  */
 
 public interface ScrabbleModelView {
-    public void handleScrabbleStatusUpdate(ScrabbleEvent e);
-    public void handleScrabblePassTurnUpdate(ScrabbleEvent e);
-
-    public void handleScrabbleUndoRedoUpdate(ScrabbleEvent e);
+    void handleScrabbleStatusUpdate(ScrabbleEvent e);
+    void handleScrabblePassTurnUpdate(ScrabbleEvent e);
+    void handleScrabbleUndoRedoUpdate(ScrabbleEvent e);
+    void handleScrabbleLoadUpdate(ScrabbleEvent e);
 }

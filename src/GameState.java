@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameState {
+public class GameState implements Serializable {
 
     private char[][] board;
     private int currentPlayerIndex;

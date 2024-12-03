@@ -124,9 +124,21 @@ public class ScrabbleController implements ActionListener {
             scrabbleModel.updateUndoRedo(gs.getBoard(),gs.getPlayers());
 
         }else if (buttonPressed.equals("Save Game")){
-            System.out.println("save game");
+            String filePath = JOptionPane.showInputDialog("Enter the file name to save the game:");
+            if (filePath != null && !filePath.isEmpty()) {
+                scrabbleModel.saveGame(filePath);
+            }else {
+                JOptionPane.showMessageDialog(null, "You must enter a file name!");
+            }
         }else if (buttonPressed.equals("Load Game")){
-            System.out.println("load game");
+            String filePath = JOptionPane.showInputDialog("Enter the file name to load the game:");
+            if (filePath != null && !filePath.isEmpty()) {
+                scrabbleModel.loadGame(filePath);
+                ScrabbleEvent event = new ScrabbleEvent(scrabbleModel, scrabbleModel.getBoard(), scrabbleModel.getCurrentPlayer(), scrabbleModel.getPlayers());
+                view.handleScrabbleLoadUpdate(event);
+            }else {
+                JOptionPane.showMessageDialog(null, "You must enter a valid file name!");
+            }
         }
     }
 }

@@ -6,11 +6,12 @@
  * @author Aqsa Atif, Yomna Ibrahim
  * @version 2, October 17, 2024
  */
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable {
     private String name;
     private int score;
     private List<Tile> tiles;

@@ -8,9 +8,10 @@
  * @version 2, October 20, 2024
  */
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Tile {
+public class Tile implements Serializable {
     private String letter;
     private int value;
 

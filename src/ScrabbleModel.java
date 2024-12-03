@@ -1,8 +1,8 @@
+import java.io.*;
 import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
-import java.io.File;
 
 /**
  * The logic behind the Scrabble game
@@ -18,7 +18,7 @@ import java.io.File;
  * @author Aqsa Atif
  * @version 4, November 26, 2024
  */
-public class ScrabbleModel {
+public class ScrabbleModel implements Serializable{
 
     public static final int SIZE = 15;
 
@@ -519,8 +519,8 @@ public class ScrabbleModel {
 
         //deep copy the board
         char[][] tempBoard = Arrays.stream(board)
-                                .map(char[]::clone) // Clone each row
-                                .toArray(char[][]::new); //store in a new array
+                .map(char[]::clone) // Clone each row
+                .toArray(char[][]::new); //store in a new array
 
         //make a new game state object
         GameState gs = new GameState(tempBoard, currentPlayerIndex, tempPlayers);
@@ -593,6 +593,40 @@ public class ScrabbleModel {
 
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
+    }
+
+    /**
+     * Saves game to a chosen file
+     * @param file
+     */
+    public void saveGame(String file) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(board); // save the board
+            oos.writeObject(players); // save players
+            oos.writeInt(currentPlayerIndex); // save the current player index
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * loads the game stored in the file passed
+     * @param file
+     */
+    public void loadGame(String file) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            // Load the board
+            board = (char[][]) ois.readObject();
+
+            // Load the players and their states
+            players = (List<Player>) ois.readObject();
+
+            // Load the current player index
+            currentPlayerIndex = ois.readInt();
+            currentPlayer = players.get(currentPlayerIndex);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
