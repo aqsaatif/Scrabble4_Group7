@@ -137,7 +137,15 @@ public class ScrabbleAI{
         }
         return score;
     }
-    
+    /**
+    * Check that the word can be placed with existing words on board
+    * @param word String 
+    * @param row int 
+    * @param col int 
+    * @param isHorizontal boolean 
+    *
+    * @return boolean
+    */
     private static boolean isValidPlacement(String word, int row, int col, boolean isHorizontal){
         char[][] board = model.getBoard();
 
