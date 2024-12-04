@@ -431,7 +431,16 @@ public class ScrabbleModel implements Serializable{
     public ArrayList<Tile> getTileSet() {
         return (ArrayList<Tile>) tileSet;
     }
-
+    
+    /**
+     * This function is used to check if a word can be placed on the board 
+     * @param word the word to be placed on the board
+     * @param row the row that the word is being placed on (from 1 to 15)
+     * @param col the column that the word is being placed on (from 1 to 15)
+     * @param isHorizontal true if the placement of the word is horizontal and F is placement is vertical
+     * @param currentPlayer The current player
+     * @return the first index indicates if the word has been placed or not ("true" if yes, "false" if no), the second index is used to indicate if there was already a letter on the board that the word used ("" if no letter, or the letter on the board that was used)
+     */
 
     public String[] checkWord(String word, int row, int col, boolean isHorizontal, Player currentPlayer) {
 
@@ -584,6 +593,12 @@ public class ScrabbleModel implements Serializable{
         return gs;
     }
 
+    /**
+     * Method used to update the views after a redo or undo
+     * @param newBoard the new board to be displayed 
+     * @param newPlayers the new players to be displayed 
+     */
+
     public void updateUndoRedo(char[][] newBoard, List<Player> newPlayers){
 
         for (ScrabbleModelView view: views){ //Update the views
@@ -591,6 +606,10 @@ public class ScrabbleModel implements Serializable{
         }
     }
 
+    /**
+     * Method used to return the current player index 
+     * @return the current player index 
+     */
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
     }
