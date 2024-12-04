@@ -42,11 +42,17 @@ public class Player implements Serializable {
         this.tiles = tempTiles;
         this.isAI = player.isAI;
     }
-
+    /**
+     * Returns if the player is AI
+     * @return True if AI, false if normal 
+     */
     public boolean isAI() {
         return isAI;
     }
-
+    /**
+     * Sets the AI status of the player 
+     * @param isAI the AI status of the player: true if AI, false if not 
+     */
     public void setIsAI(boolean isAI) {
         this.isAI = isAI;
     }
