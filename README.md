@@ -8,6 +8,6 @@ Authors: Aqsa Atif, Lujain Jdue, Yomna Ibrahim, Basma Mohammed
 
 Changes that were made Since the Last Deliverable: Additional features were added such as the multiple level undo/redo, Save/load features and custom boards with alternate placement of premium squares. All updates were included in the UML and additional tests were added to test the new functionalities. 
 
-Known Issues: N/A
+Known Issues: 
 
 Roadmap Ahead: Scrabble game is complete. Potential additional features and enhancement could be added. 
