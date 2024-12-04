@@ -44,6 +44,11 @@ public class ScrabbleEvent extends EventObject {
         return board;
     }
 
+    /**
+     * Method to get the players
+     * @return the list of players
+     */
+
     public List<Player> getPlayers() {
         return players;
     }
