@@ -31,6 +31,11 @@ public class Tile implements Serializable {
         this.tileScores = new HashMap<String, Integer>();
         initTileScores();
     }
+    /**
+     * Constructor for a Tile object from another tile object.
+     *
+     * @param tile The tile to be used for the new object 
+     */
 
     public Tile(Tile tile) {
         this.letter = tile.letter;
