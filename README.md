@@ -6,8 +6,8 @@ Current Deliverable: Milestone 4 Next Deliverables: Milestone 5 (Bonus)
 
 Authors: Aqsa Atif, Lujain Jdue, Yomna Ibrahim, Basma Mohammed
 
-Changes that were made Since the Last Deliverable:
+Changes that were made Since the Last Deliverable: Additional features were added such as the multiple level undo/redo, Save/load features and custom boards with alternate placement of premium squares. All updates were included in the UML and additional tests were added to test the new functionalities. 
 
-Known Issues: 
+Known Issues: N/A
 
 Roadmap Ahead: Scrabble game is complete. Potential additional features and enhancement could be added. 
