@@ -16,6 +16,9 @@ import java.util.ArrayList;
  *
  * @author Aqsa Atif
  * @version 4 November 29, 2024
+ *
+ * @author Yomna Ibrahim, Basma Mohamed 
+ * @version 5 December 1, 2024
  */
 
 public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView {
@@ -447,7 +450,11 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
             }
         }
     }
-
+    
+    /**
+     * Method used to update the GUI when a player undos/redos their turn 
+     * @param e EventObject used to get the board and current player information
+     */
     @Override
     public void handleScrabbleUndoRedoUpdate(ScrabbleEvent e) {
         char[][] board = e.getBoard();
@@ -476,6 +483,11 @@ public class ScrabbleModelViewFrame extends JFrame implements ScrabbleModelView 
         }
 
     }
+
+    /**
+     * Method used to update the GUI when a game is loaded from a file 
+     * @param e EventObject used to get the board and current player information
+     */
 
     @Override
     public void handleScrabbleLoadUpdate(ScrabbleEvent e) {
